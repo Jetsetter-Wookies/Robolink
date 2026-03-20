@@ -2127,6 +2127,112 @@ drone.<span class="fn2">close</span>()</code></pre></div>
     </div>
   </div>
 
+
+  <!-- MISC -->
+  <div id="page-misc" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Function Reference</div>
+      <h1>Misc</h1>
+      <p class="hero-desc">Extra Python tools you can use with your drone like time, keyboard, and random.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+        <!-- import time -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">import time</span>
+            <span class="fn-brief">timing + delays</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row">
+              <div class="fn-label">time.sleep(seconds)</div>
+              <div class="fn-desc">pause between commands</div>
+            </div>
+<pre><code>import time
+time.sleep(2) # basic delay
+drone.flip("back")
+time.sleep(4) # cooldown after flip
+while True:
+    drone.set_led(255,0,0)
+    time.sleep(0.2)
+    drone.set_led(0,0,0)
+    time.sleep(0.2)</code></pre>
+            <div class="fn-row">
+              <div class="fn-label">time.time()</div>
+              <div class="fn-desc">run stuff for exact time</div>
+            </div>
+<pre><code>start = time.time()
+while time.time() - start < 5:
+    drone.go("forward", 30)
+start = time.time()
+while time.time() - start < 20:
+    print(drone.get_height())</code></pre>
+          </div>
+        </div>
+        <!-- import keyboard -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">import keyboard</span>
+            <span class="fn-brief">keyboard control</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row">
+              <div class="fn-label">keyboard.is_pressed(key)</div>
+              <div class="fn-desc">real time WASD control</div>
+            </div>
+<pre><code>import keyboard
+while True:
+    if keyboard.is_pressed("w"):
+        drone.go("forward", 50)
+    if keyboard.is_pressed("s"):
+        drone.go("backward", 50)
+    if keyboard.is_pressed("a"):
+        drone.go("left", 50)
+    if keyboard.is_pressed("d"):
+        drone.go("right", 50)</code></pre>
+            <div class="fn-row">
+              <div class="fn-label">keyboard.read_key()</div>
+            </div>
+<pre><code>key = keyboard.read_key()
+if key == "w":
+    drone.go("forward", 50)</code></pre>
+            <div class="fn-row">
+              <div class="fn-label">keyboard.on_press_key(key, callback)</div>
+            </div>
+<pre><code>def flip():
+    drone.flip("back")
+keyboard.on_press_key("space", lambda _: flip())</code></pre>
+          </div>
+        </div>
+        <!-- import random -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">import random</span>
+            <span class="fn-brief">random stuff</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row">
+              <div class="fn-label">random.randint(a, b)</div>
+            </div>
+<pre><code>import random
+r = random.randint(0,255)
+g = random.randint(0,255)
+b = random.randint(0,255)
+drone.set_led(r,g,b)</code></pre>
+            <div class="fn-row">
+              <div class="fn-label">random.choice(sequence)</div>
+            </div>
+<pre><code>notes = ["C", "D", "E", "G"]
+print(random.choice(notes))</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <script>
