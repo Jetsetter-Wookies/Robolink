@@ -1,0 +1,2243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoDrone EDU — Python Documentation</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0e14;
+    --bg2: #111520;
+    --bg3: #161b27;
+    --surface: #1c2233;
+    --surface2: #222840;
+    --border: #2a3350;
+    --accent: #3d7fff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b3d;
+    --warn: #ffb84d;
+    --text: #e2e8f8;
+    --text2: #8a9ac0;
+    --text3: #5a6a90;
+    --code-bg: #0d1117;
+    --sidebar-w: 280px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ───── SIDEBAR ───── */
+  #sidebar {
+    width: var(--sidebar-w);
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .logo-text { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .logo-sub { font-size: 11px; color: var(--text3); font-weight: 400; }
+
+  .nav-section { padding: 12px 0; }
+
+  .nav-section-title {
+    padding: 6px 20px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  .nav-link {
+    display: block;
+    padding: 7px 20px;
+    font-size: 13.5px;
+    color: var(--text2);
+    text-decoration: none;
+    transition: color 0.15s, background 0.15s;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+  }
+
+  .nav-link:hover { color: var(--text); background: var(--bg3); }
+  .nav-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(61,127,255,0.07); }
+
+  .nav-link.sub { padding-left: 32px; font-size: 13px; }
+
+  /* ───── MAIN ───── */
+  #main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 0;
+  }
+
+  /* ───── HERO ───── */
+  #hero {
+    background: linear-gradient(135deg, #0d1220 0%, #0f1a30 50%, #0d1220 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 64px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 50%, rgba(61,127,255,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 60%, rgba(0,212,170,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(61,127,255,0.12);
+    border: 1px solid rgba(61,127,255,0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 18px;
+  }
+
+  #hero h1 {
+    font-size: 46px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, #ffffff 0%, #a0b8e8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    color: var(--text2);
+    max-width: 560px;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  .hero-chips {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  .chip-blue { background: rgba(61,127,255,0.1); border-color: rgba(61,127,255,0.3); color: #7baeff; }
+  .chip-green { background: rgba(0,212,170,0.1); border-color: rgba(0,212,170,0.3); color: #00d4aa; }
+  .chip-orange { background: rgba(255,107,61,0.1); border-color: rgba(255,107,61,0.3); color: #ff8f6b; }
+
+  /* ───── CONTENT ───── */
+  #content {
+    padding: 48px 64px;
+    max-width: 900px;
+  }
+
+  /* ───── SECTIONS ───── */
+  .doc-section {
+    margin-bottom: 64px;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: none; } }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .icon-blue { background: rgba(61,127,255,0.15); }
+  .icon-green { background: rgba(0,212,170,0.15); }
+  .icon-orange { background: rgba(255,107,61,0.15); }
+  .icon-purple { background: rgba(150,100,255,0.15); }
+  .icon-yellow { background: rgba(255,184,77,0.15); }
+
+  .section-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  /* ───── FUNCTION CARDS ───── */
+  .fn-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .fn-card:hover { border-color: rgba(61,127,255,0.4); }
+
+  .fn-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    gap: 12px;
+  }
+
+  .fn-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--accent2);
+  }
+
+  .fn-brief {
+    font-size: 13px;
+    color: var(--text3);
+    flex: 1;
+    padding-left: 16px;
+  }
+
+  .fn-toggle {
+    width: 24px; height: 24px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    color: var(--text3);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .fn-card.open .fn-toggle { background: var(--accent); border-color: var(--accent); color: white; transform: rotate(45deg); }
+
+  .fn-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+
+  .fn-card.open .fn-body { display: block; }
+
+  .fn-row { margin-bottom: 18px; }
+  .fn-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+
+  .fn-desc { font-size: 14px; color: var(--text2); line-height: 1.65; }
+
+  .syntax-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #c9d1e8;
+    line-height: 1.6;
+  }
+
+  .param-list { list-style: none; }
+  .param-list li {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: baseline;
+  }
+  .param-list li:last-child { border: none; }
+
+  .param-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--accent3);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .param-desc { font-size: 13px; color: var(--text2); }
+
+  /* ───── CODE ───── */
+  .code-wrap {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .code-header {
+    background: #0f1520;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-lang {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text3);
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .copy-btn.copied { border-color: var(--accent2); color: var(--accent2); }
+
+  pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  pre code { color: #c9d1e8; }
+
+  /* syntax highlighting */
+  .kw { color: #7ba7f5; }
+  .cm { color: #5a7090; font-style: italic; }
+  .st { color: #89d98b; }
+  .fn2 { color: var(--accent2); }
+  .num { color: #f5a97f; }
+
+  /* ───── NOTE / WARN BOXES ───── */
+  .note-box, .warn-box, .dep-box {
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    display: block;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .note-box { background: rgba(61,127,255,0.08); border: 1px solid rgba(61,127,255,0.25); color: #8ab4ff; }
+  .warn-box { background: rgba(255,184,77,0.08); border: 1px solid rgba(255,184,77,0.3); color: #ffcc7a; }
+  .dep-box { background: rgba(255,107,61,0.08); border: 1px solid rgba(255,107,61,0.25); color: #ffaa88; }
+
+  /* ───── SEARCH ───── */
+  .search-wrap {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 13px;
+    color: var(--text3);
+    pointer-events: none;
+  }
+
+  #search-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px 8px 32px;
+    font-size: 13px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  #search-input:focus { border-color: var(--accent); }
+  #search-input::placeholder { color: var(--text3); }
+
+  #search-results {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 16px;
+    right: 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    z-index: 200;
+    max-height: 340px;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  #search-results.visible { display: block; }
+
+  .sr-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  .sr-item:last-child { border: none; }
+  .sr-item:hover { background: var(--bg3); }
+
+  .sr-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--accent2);
+    margin-bottom: 2px;
+  }
+
+  .sr-section {
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .sr-match {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+
+  .sr-highlight { color: var(--accent); font-weight: 600; }
+
+  .sr-empty {
+    padding: 14px;
+    font-size: 13px;
+    color: var(--text3);
+    text-align: center;
+  }
+
+  /* ───── SETUP STEPS ───── */
+  .steps { counter-reset: step; }
+  .step {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 28px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    counter-increment: step;
+    width: 34px; height: 34px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .step-content p { font-size: 14px; color: var(--text2); }
+
+  /* ───── SPECS TABLE ───── */
+  .spec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .spec-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .spec-card h4 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+
+  .spec-row:last-child { border: none; }
+  .spec-row .spec-key { color: var(--text2); }
+  .spec-row .spec-val { color: var(--text); font-weight: 500; text-align: right; }
+
+  /* ───── QUICK NAV PILLS ───── */
+  .quick-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .qn-pill {
+    padding: 5px 13px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 600;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .qn-pill:hover { border-color: var(--accent); color: var(--accent); background: rgba(61,127,255,0.08); }
+
+  /* ───── BREADCRUMB ───── */
+  .breadcrumb {
+    font-size: 12.5px;
+    color: var(--text3);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .breadcrumb span { color: var(--text2); }
+
+  /* ───── SCROLLBAR ───── */
+  #main::-webkit-scrollbar { width: 5px; }
+  #main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ───── MOBILE ───── */
+  .hamburger {
+    display: none;
+    position: fixed;
+    top: 14px; left: 14px;
+    z-index: 200;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text);
+  }
+
+  @media (max-width: 768px) {
+    #sidebar { transform: translateX(-100%); transition: transform 0.25s; }
+    #sidebar.open { transform: none; }
+    #main { margin-left: 0; }
+    .hamburger { display: block; }
+    #content { padding: 48px 24px 24px; }
+    #hero { padding: 60px 24px 40px; }
+    #hero h1 { font-size: 32px; }
+    .spec-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🚁</div>
+    <div>
+      <div class="logo-text">CoDrone EDU</div>
+      <div class="logo-sub">Python Documentation</div>
+    </div>
+  </div>
+
+  <div class="search-wrap" style="position:relative">
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input id="search-input" type="text" placeholder="Search functions…" autocomplete="off" oninput="handleSearch(this.value)" onkeydown="handleSearchKey(event)">
+    </div>
+    <div id="search-results"></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Overview</div>
+    <a class="nav-link active" onclick="show('home')">Home</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Python Setup</div>
+    <a class="nav-link" onclick="show('getting-started')">Getting Started</a>
+    <a class="nav-link sub" onclick="show('getting-started')">Python for Robolink</a>
+    <a class="nav-link sub" onclick="show('getting-started')">PyCharm Setup</a>
+    <a class="nav-link sub" onclick="show('getting-started')">System Requirements</a>
+    <a class="nav-link" onclick="show('updating')">Updating the Library</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Function Reference</div>
+    <a class="nav-link" onclick="show('connection')">Connection</a>
+    <a class="nav-link" onclick="show('flight-commands')">Flight Commands</a>
+    <a class="nav-link" onclick="show('flight-sequences')">Flight Sequences</a>
+    <a class="nav-link" onclick="show('flight-variables')">Flight Variables</a>
+    <a class="nav-link" onclick="show('led')">LED Control</a>
+    <a class="nav-link" onclick="show('sounds')">Sounds & Buzzer</a>
+    <a class="nav-link" onclick="show('sensors-range')">Sensors — Range</a>
+    <a class="nav-link" onclick="show('sensors-optical')">Sensors — Optical Flow</a>
+    <a class="nav-link" onclick="show('sensors-gyro')">Sensors — Gyroscope</a>
+    <a class="nav-link" onclick="show('sensors-color')">Sensors — Color</a>
+    <a class="nav-link" onclick="show('sensors-battery')">Sensors — Battery</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">Resources</div>
+    <a class="nav-link" onclick="show('specs')">Technical Specifications</a>
+    <a class="nav-link" onclick="show('sensor-guide')">Sensor Guide</a>
+    <a class="nav-link" href="https://docs.robolink.com/docs/CoDroneEDU/Python/Python-Changelog" target="_blank">Changelog ↗</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- HOME PAGE -->
+  <div id="page-home">
+    <div id="hero">
+      <div class="hero-badge">📘 Python Documentation v2.8</div>
+      <h1>CoDrone EDU<br>Python Reference</h1>
+      <p class="hero-desc">Everything you need to program your CoDrone EDU in Python — setup guides, full function documentation, sensor references, and code examples.</p>
+      <div class="hero-chips">
+        <span class="chip chip-blue">🐍 Python 3.x</span>
+        <span class="chip chip-green">PyCharm IDE</span>
+        <span class="chip chip-orange">Python for Robolink</span>
+      </div>
+    </div>
+
+    <div id="content">
+      <div class="doc-section">
+        <div class="section-header">
+          <div class="section-icon icon-blue">🗺️</div>
+          <h2>Quick Navigation</h2>
+        </div>
+        <div class="quick-nav">
+          <a class="qn-pill" onclick="show('getting-started')">🚀 Getting Started</a>
+          <a class="qn-pill" onclick="show('connection')">🔗 Connection</a>
+          <a class="qn-pill" onclick="show('flight-commands')">✈️ Flight Commands</a>
+          <a class="qn-pill" onclick="show('flight-sequences')">🔄 Flight Sequences</a>
+          <a class="qn-pill" onclick="show('flight-variables')">🎮 Flight Variables</a>
+          <a class="qn-pill" onclick="show('led')">💡 LED Control</a>
+          <a class="qn-pill" onclick="show('sounds')">🔔 Sounds</a>
+          <a class="qn-pill" onclick="show('sensors-range')">📡 Range Sensors</a>
+          <a class="qn-pill" onclick="show('sensors-optical')">👁️ Optical Flow</a>
+          <a class="qn-pill" onclick="show('sensors-gyro')">🌀 Gyroscope</a>
+          <a class="qn-pill" onclick="show('sensors-color')">🎨 Color Sensor</a>
+          <a class="qn-pill" onclick="show('specs')">📋 Specifications</a>
+        </div>
+
+        <div class="note-box">ℹ️&nbsp;<strong>Note:</strong> This documentation covers Python programming for the CoDrone EDU only. All examples use the <code>codrone_edu</code> library (v2.8).</div>
+      </div>
+
+      <div class="doc-section">
+        <div class="section-header">
+          <div class="section-icon icon-green">⚡</div>
+          <h2>Quick Start Example</h2>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">Python</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code><span class="cm"># Basic CoDrone EDU flight example</span>
+<span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+
+drone = Drone()
+drone.<span class="fn2">pair</span>()          <span class="cm"># Connect to controller</span>
+
+drone.<span class="fn2">takeoff</span>()       <span class="cm"># Take off (~80cm hover)</span>
+drone.<span class="fn2">hover</span>(<span class="num">2</span>)        <span class="cm"># Hover for 2 seconds</span>
+drone.<span class="fn2">go</span>(<span class="st">"forward"</span>, <span class="num">30</span>, <span class="num">2</span>) <span class="cm"># Forward at 30% power, 2 sec</span>
+drone.<span class="fn2">turn_left</span>(<span class="num">90</span>)  <span class="cm"># Turn left 90°</span>
+drone.<span class="fn2">land</span>()          <span class="cm"># Land</span>
+
+drone.<span class="fn2">close</span>()         <span class="cm"># Close connection</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GETTING STARTED -->
+  <div id="page-getting-started" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Getting Started</div>
+      <h1>Getting Started</h1>
+      <p class="hero-desc">Two ways to code your CoDrone EDU in Python: browser-based <em>Python for Robolink</em> or desktop PyCharm.</p>
+    </div>
+    <div id="content">
+
+      <div class="doc-section">
+        <div class="section-header">
+          <div class="section-icon icon-green">🌐</div>
+          <h2>Option 1 — Python for Robolink (Browser)</h2>
+        </div>
+        <p style="color:var(--text2); margin-bottom:18px"><em>Python for Robolink</em> is a browser-based coding environment — no installation required. Ideal for Chromebooks or devices with limited storage.</p>
+
+        <div class="note-box">🔗&nbsp;<strong>Access it at:</strong> <a href="https://codrone.robolink.com/edu/python/" target="_blank" style="color:var(--accent)">codrone.robolink.com/edu/python/</a> — works in Google Chrome on any device (not tablets/phones).</div>
+
+        <h3 style="font-size:16px; margin:24px 0 12px; color:var(--text)">Key Features</h3>
+        <div class="spec-grid">
+          <div class="spec-card">
+            <h4>📁 File Explorer</h4>
+            <p style="font-size:13px; color:var(--text2)">Located on the left side. Create and organize Python files and folders. Supports upload of JPEG, PNG, Python, and text files. Right-click for rename/delete options.</p>
+          </div>
+          <div class="spec-card">
+            <h4>🎨 Color Training Tool</h4>
+            <p style="font-size:13px; color:var(--text2)">Found on the right side. Collect, train and test HSVL color data from the drone's color sensor. Create custom color datasets for use in programs.</p>
+          </div>
+          <div class="spec-card">
+            <h4>💻 Console</h4>
+            <p style="font-size:13px; color:var(--text2)">Click the "Console" button on the right. Shows output, prompts for user input, and displays error/warning messages.</p>
+          </div>
+          <div class="spec-card">
+            <h4>📱 Compatibility</h4>
+            <p style="font-size:13px; color:var(--text2)">Works on Chromebooks, Windows, macOS. Requires Google Chrome (latest). Not supported on iPads, tablets, or phones.</p>
+          </div>
+        </div>
+
+        <div class="warn-box" style="margin-top:18px">ℹ️&nbsp;<strong>Use Python for Robolink if</strong> you're on a Chromebook, don't have space for PyCharm, your IT team hasn't installed PyCharm, or you need a quick setup.</div>
+      </div>
+
+      <div class="doc-section">
+        <div class="section-header">
+          <div class="section-icon icon-blue">💻</div>
+          <h2>Option 2 — PyCharm (Desktop)</h2>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Install Python</h4>
+              <p>Download from <a href="https://www.python.org/downloads/" target="_blank" style="color:var(--accent)">python.org/downloads/</a>. Click the yellow "Download Python 3.X" button for the latest release. <strong>Important:</strong> If using a school computer, ensure you have admin credentials.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Install PyCharm</h4>
+              <p>Download the free Community edition from <a href="https://www.jetbrains.com/pycharm/download/" target="_blank" style="color:var(--accent)">jetbrains.com/pycharm/download/</a>. If you prefer a different editor or IDE, you'll need to know how to install packages manually.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Install the CoDrone EDU Library</h4>
+              <p>Create a new PyCharm project and add the import statement to your <code style="color:var(--accent2)">main.py</code>. PyCharm will prompt you to install the library automatically.</p>
+              <div class="code-wrap" style="margin-top:10px">
+                <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                <pre><code><span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *</code></pre>
+              </div>
+              <div class="note-box" style="margin-top:10px">💡 If no <code>main.py</code> was generated, right-click your project name → <strong>New → Python File</strong>.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <div class="section-header">
+          <div class="section-icon icon-orange">📋</div>
+          <h2>System Requirements</h2>
+        </div>
+        <div class="spec-grid">
+          <div class="spec-card">
+            <h4>Device</h4>
+            <div class="spec-row"><span class="spec-key">OS (PyCharm)</span><span class="spec-val">macOS, Windows</span></div>
+            <div class="spec-row"><span class="spec-key">OS (Browser)</span><span class="spec-val">+ChromeOS</span></div>
+            <div class="spec-row"><span class="spec-key">Windows version</span><span class="spec-val">Windows 10+</span></div>
+            <div class="spec-row"><span class="spec-key">Port required</span><span class="spec-val">USB-A</span></div>
+            <div class="spec-row"><span class="spec-key">Mobile devices</span><span class="spec-val">Not supported</span></div>
+          </div>
+          <div class="spec-card">
+            <h4>Google Chrome</h4>
+            <div class="spec-row"><span class="spec-key">Version</span><span class="spec-val">Latest (keep updated)</span></div>
+            <div class="spec-row"><span class="spec-key">Check version</span><span class="spec-val">Menu → Help → About</span></div>
+            <div class="spec-row"><span class="spec-key">USB cable</span><span class="spec-val">Data-transfer capable</span></div>
+            <div class="spec-row"><span class="spec-key">Tablet/phone</span><span class="spec-val">Not supported</span></div>
+          </div>
+        </div>
+        <div class="warn-box" style="margin-top:14px">🔌&nbsp;<strong>Cable tip:</strong> Use the cable that came with CoDrone EDU. If the drone doesn't switch to LINK state when connecting, your cable may not support data transfer.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPDATING LIBRARY -->
+  <div id="page-updating" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Updating the Library</div>
+      <h1>Updating the Library</h1>
+      <p class="hero-desc">Keep your codrone_edu library up to date for the latest features and bug fixes.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+        <div class="section-header">
+          <div class="section-icon icon-blue">🔄</div>
+          <h2>Update via pip (Terminal / Command Prompt)</h2>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">Shell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><code>pip install codrone-edu --upgrade</code></pre>
+        </div>
+        <div class="note-box" style="margin-top:14px">💡 In PyCharm, you can also go to <strong>File → Settings → Project → Python Interpreter</strong>, find <code>codrone-edu</code> and click the upgrade button.</div>
+      </div>
+      <div class="doc-section">
+        <div class="section-header">
+          <div class="section-icon icon-green">🌐</div>
+          <h2>Update in Python for Robolink</h2>
+        </div>
+        <p style="color:var(--text2)">Python for Robolink updates automatically — you always have the latest version when you visit <a href="https://codrone.robolink.com/edu/python/" target="_blank" style="color:var(--accent)">codrone.robolink.com/edu/python/</a>. No manual update needed.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONNECTION -->
+  <div id="page-connection" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Function Reference</div>
+      <h1>Connection</h1>
+      <p class="hero-desc">Functions for establishing and closing the connection between your program and the CoDrone EDU controller.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">pair()</span>
+            <span class="fn-brief">Connect controller to program</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row">
+              <div class="fn-label">Description</div>
+              <div class="fn-desc">Connects your controller with the program. You can optionally specify the USB port name.</div>
+            </div>
+            <div class="fn-row">
+              <div class="fn-label">Syntax</div>
+              <div class="syntax-block">drone.pair()<br>drone.pair(portname)</div>
+            </div>
+            <div class="fn-row">
+              <div class="fn-label">Parameters</div>
+              <ul class="param-list">
+                <li><span class="param-name">portname</span><span class="param-desc"><em>string</em> — Optional. A string containing the port name or number (e.g., <code>'COM3'</code>).</span></li>
+              </ul>
+            </div>
+            <div class="fn-row">
+              <div class="fn-label">Returns</div>
+              <div class="fn-desc">None</div>
+            </div>
+            <div class="fn-row">
+              <div class="fn-label">Example</div>
+              <div class="code-wrap">
+                <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                <pre><code><span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+
+drone = Drone()
+drone.<span class="fn2">pair</span>() <span class="cm"># pair automatically</span>
+<span class="cm"># drone.pair(port_name='COM3')  # pair with specific port</span>
+
+drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">hover</span>(<span class="num">1</span>)
+drone.<span class="fn2">land</span>()
+drone.<span class="fn2">close</span>()</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">close()</span>
+            <span class="fn-brief">Close connection to program</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row">
+              <div class="fn-label">Description</div>
+              <div class="fn-desc">Closes the connection of your controller with the program. Always call this at the end of your program.</div>
+            </div>
+            <div class="fn-row">
+              <div class="fn-label">Syntax</div>
+              <div class="syntax-block">drone.close()</div>
+            </div>
+            <div class="fn-row">
+              <div class="fn-label">Parameters</div>
+              <div class="fn-desc">None</div>
+            </div>
+            <div class="fn-row">
+              <div class="fn-label">Returns</div>
+              <div class="fn-desc">None</div>
+            </div>
+            <div class="fn-row">
+              <div class="fn-label">Example</div>
+              <div class="code-wrap">
+                <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                <pre><code><span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+
+drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">hover</span>(<span class="num">1</span>)
+drone.<span class="fn2">land</span>()
+
+drone.<span class="fn2">close</span>() <span class="cm"># always close at the end</span></code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLIGHT COMMANDS -->
+  <div id="page-flight-commands" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Function Reference</div>
+      <h1>Flight Commands</h1>
+      <p class="hero-desc">Core functions for controlling drone flight: takeoff, landing, movement, and precision positioning.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+
+        <!-- takeoff -->
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">takeoff()</span>
+            <span class="fn-brief">Take off to ~80cm and hover</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Makes the drone take off at an average height of 80 centimeters and hover. The drone always hovers for 1 second to stabilize before the next command. Takeoff height cannot be modified.</div></div>
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.takeoff()</div></div>
+            <div class="fn-row"><div class="fn-label">Parameters</div><div class="fn-desc">None</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">hover</span>(<span class="num">3</span>)
+drone.<span class="fn2">land</span>()
+drone.<span class="fn2">close</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- land -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">land()</span>
+            <span class="fn-brief">Soft landing at current position</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Makes the drone stop all commands, hover, and make a soft landing. Also resets all flight motion variables to 0. <strong>Tip:</strong> Add a <code>hover()</code> or <code>time.sleep()</code> between <code>takeoff()</code> and <code>land()</code> to prevent the land command from being skipped.</div></div>
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.land()</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">hover</span>(<span class="num">3</span>) <span class="cm"># prevents land() from being skipped</span>
+drone.<span class="fn2">land</span>()
+drone.<span class="fn2">close</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- emergency_stop -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">emergency_stop()</span>
+            <span class="fn-brief">Immediately cut all motors</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Immediately stops all commands and motors — the drone drops. Resets all flight motion variables to 0. Add a <code>hover()</code> before this to ensure the command is received.</div></div>
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.emergency_stop()</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">hover</span>(<span class="num">3</span>) <span class="cm"># recommended before emergency_stop</span>
+drone.<span class="fn2">emergency_stop</span>()
+drone.<span class="fn2">close</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- hover -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">hover(duration)</span>
+            <span class="fn-brief">Hover in place for given seconds</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Makes the drone hover for a given amount of time. With no parameter, hovers indefinitely until given another command.</div></div>
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.hover(duration)</div></div>
+            <div class="fn-row"><div class="fn-label">Parameters</div>
+              <ul class="param-list">
+                <li><span class="param-name">duration</span><span class="param-desc"><em>integer</em> — Duration in seconds.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">hover</span>(<span class="num">3</span>) <span class="cm"># hover 3 seconds</span>
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- go -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">go(direction, power, duration)</span>
+            <span class="fn-brief">Beginner-friendly directional movement</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Moves the drone in a given direction at a given power for a given duration. Great for beginners.</div></div>
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.go(direction, power=50, duration=1)</div></div>
+            <div class="fn-row"><div class="fn-label">Parameters</div>
+              <ul class="param-list">
+                <li><span class="param-name">direction</span><span class="param-desc"><em>string</em> — <code>"forward"</code>, <code>"backward"</code>, <code>"right"</code>, <code>"left"</code>, <code>"up"</code>, <code>"down"</code></span></li>
+                <li><span class="param-name">power</span><span class="param-desc"><em>int</em> — Power 0–100. Default: 50.</span></li>
+                <li><span class="param-name">duration</span><span class="param-desc"><em>float</em> — Duration in seconds. Default: 1.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">go</span>(<span class="st">"forward"</span>, <span class="num">30</span>, <span class="num">1</span>)  <span class="cm"># forward 30% power 1s</span>
+drone.<span class="fn2">go</span>(<span class="st">"backward"</span>, <span class="num">30</span>, <span class="num">1</span>) <span class="cm"># backward</span>
+drone.<span class="fn2">go</span>(<span class="st">"right"</span>, <span class="num">30</span>, <span class="num">1</span>)    <span class="cm"># right</span>
+drone.<span class="fn2">go</span>(<span class="st">"left"</span>, <span class="num">30</span>, <span class="num">1</span>)     <span class="cm"># left</span>
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- move_forward/backward/left/right -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">move_forward / move_backward / move_left / move_right</span>
+            <span class="fn-brief">Precise distance-based movement</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Moves the drone a precise distance in the specified direction using the optical flow sensor. For best performance, fly over a well-lit, patterned surface.</div></div>
+            <div class="fn-row"><div class="fn-label">Syntax</div>
+              <div class="syntax-block">drone.move_forward(distance, units="cm", speed=1)<br>drone.move_backward(distance, units="cm", speed=1)<br>drone.move_left(distance, units="cm", speed=1)<br>drone.move_right(distance, units="cm", speed=1)</div>
+            </div>
+            <div class="fn-row"><div class="fn-label">Parameters</div>
+              <ul class="param-list">
+                <li><span class="param-name">distance</span><span class="param-desc"><em>float</em> — Distance to travel.</span></li>
+                <li><span class="param-name">units</span><span class="param-desc"><em>string</em> — <code>"cm"</code>, <code>"m"</code>, <code>"ft"</code>, <code>"in"</code>. Default: <code>"cm"</code>.</span></li>
+                <li><span class="param-name">speed</span><span class="param-desc"><em>float</em> — Speed in m/s. Default: 1.0. Max: 2.0.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">move_forward</span>(distance=<span class="num">50</span>, units=<span class="st">"cm"</span>, speed=<span class="num">1</span>)
+drone.<span class="fn2">move_right</span>(distance=<span class="num">50</span>, units=<span class="st">"cm"</span>, speed=<span class="num">1</span>)
+drone.<span class="fn2">move_backward</span>(distance=<span class="num">50</span>, units=<span class="st">"cm"</span>, speed=<span class="num">1</span>)
+drone.<span class="fn2">move_left</span>(distance=<span class="num">50</span>, units=<span class="st">"cm"</span>, speed=<span class="num">1</span>)
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- move_distance -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">move_distance(x, y, z, velocity)</span>
+            <span class="fn-brief">Move relative to current position on all 3 axes</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Moves the drone by specified distances along X, Y, and Z axes relative to its current position and heading. Non-zero values on multiple axes move simultaneously.</div></div>
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.move_distance(positionX, positionY, positionZ, velocity)</div></div>
+            <div class="fn-row"><div class="fn-label">Parameters</div>
+              <ul class="param-list">
+                <li><span class="param-name">positionX</span><span class="param-desc"><em>float</em> — X distance in meters (forward/backward).</span></li>
+                <li><span class="param-name">positionY</span><span class="param-desc"><em>float</em> — Y distance in meters (left/right).</span></li>
+                <li><span class="param-name">positionZ</span><span class="param-desc"><em>float</em> — Z distance in meters (up/down).</span></li>
+                <li><span class="param-name">velocity</span><span class="param-desc"><em>float</em> — Speed in m/s. Default: 1.0. Max: 2.0.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+<span class="cm"># Move forward 0.5m, left 0.5m, up 0.25m simultaneously at 1m/s</span>
+drone.<span class="fn2">move_distance</span>(<span class="num">0.5</span>, <span class="num">0.5</span>, <span class="num">0.25</span>, <span class="num">1</span>)
+<span class="cm"># Move back 0.75m at 0.75m/s</span>
+drone.<span class="fn2">move_distance</span>(<span class="num">-0.75</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0.75</span>)
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- turn functions -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">turn() / turn_left() / turn_right() / turn_degree()</span>
+            <span class="fn-brief">Rotate the drone</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Functions</div>
+              <ul class="param-list">
+                <li><span class="param-name">turn(power, seconds)</span><span class="param-desc">Turn by power (-100–100). Negative=right, positive=left.</span></li>
+                <li><span class="param-name">turn_left(degree=90)</span><span class="param-desc">Turn left by degrees using built-in gyroscope. Default: 90°.</span></li>
+                <li><span class="param-name">turn_right(degree=90)</span><span class="param-desc">Turn right by degrees using built-in gyroscope. Default: 90°.</span></li>
+                <li><span class="param-name">turn_degree(degree, timeout=3)</span><span class="param-desc">Turn to absolute heading. Takes shortest rotation path.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">turn_left</span>()       <span class="cm"># 90° left turn</span>
+drone.<span class="fn2">hover</span>(<span class="num">1</span>)
+drone.<span class="fn2">turn_right</span>(<span class="num">45</span>)   <span class="cm"># 45° right turn</span>
+drone.<span class="fn2">hover</span>(<span class="num">1</span>)
+drone.<span class="fn2">turn_degree</span>(<span class="num">180</span>) <span class="cm"># face 180° from start</span>
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- trim -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">set_trim() / reset_trim() / get_trim()</span>
+            <span class="fn-brief">Correct drift with roll/pitch trim</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Set, reset, or get the roll and pitch trim values to correct drone drift. Trim is saved even after power-off until changed or reset.</div></div>
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.set_trim(roll, pitch)   # -100 to 100<br>drone.reset_trim()            # resets to 0<br>drone.get_trim()              # returns [roll, pitch]</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">import</span> time
+<span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+<span class="cm"># Drone drifts right → trim roll left</span>
+drone.<span class="fn2">set_trim</span>(<span class="num">-5</span>, <span class="num">0</span>)
+time.sleep(<span class="num">1</span>) <span class="cm"># required before takeoff when setting trim</span>
+drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">hover</span>(<span class="num">3</span>)
+drone.<span class="fn2">land</span>()
+drone.<span class="fn2">reset_trim</span>()
+drone.<span class="fn2">close</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- avoid_wall / keep_distance -->
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">avoid_wall() / keep_distance()</span>
+            <span class="fn-brief">Sensor-based wall avoidance</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Functions</div>
+              <ul class="param-list">
+                <li><span class="param-name">avoid_wall(timeout=2, distance=70)</span><span class="param-desc">Fly forward and stop when an object is detected within <code>distance</code> cm. Sensor range: 0–100cm.</span></li>
+                <li><span class="param-name">keep_distance(timeout=2, distance=50)</span><span class="param-desc">Fly forward until <code>distance</code> cm from object, then maintain that distance. Sensor range: up to 150cm.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">avoid_wall</span>(<span class="num">10</span>, <span class="num">50</span>) <span class="cm"># run 10s, stop 50cm from wall</span>
+drone.<span class="fn2">keep_distance</span>(<span class="num">10</span>, <span class="num">60</span>) <span class="cm"># maintain 60cm for 10s</span>
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FLIGHT SEQUENCES -->
+  <div id="page-flight-sequences" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Function Reference</div>
+      <h1>Flight Sequences</h1>
+      <p class="hero-desc">Pre-built flight patterns — make the drone fly circles, spirals, squares, triangles, and more.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">circle(speed=75, direction=1)</span>
+            <span class="fn-brief">Fly in a circle (~4–5ft diameter)</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Parameters</div>
+              <ul class="param-list">
+                <li><span class="param-name">speed</span><span class="param-desc"><em>int</em> — 0–100. Default: 75.</span></li>
+                <li><span class="param-name">direction</span><span class="param-desc"><em>int</em> — 1=right, -1=left. Default: 1.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">circle</span>() <span class="cm"># default circle (75, 1)</span>
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">flip(direction="back")</span>
+            <span class="fn-brief">Flip backward, forward, left, or right</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Performs a flip. <strong>Battery must be above 50%.</strong> The drone takes 3–4 seconds after a flip before accepting another flight command.</div></div>
+            <div class="fn-row"><div class="fn-label">Parameters</div>
+              <ul class="param-list">
+                <li><span class="param-name">direction</span><span class="param-desc"><em>string</em> — <code>"back"</code>, <code>"front"</code>, <code>"right"</code>, <code>"left"</code>. Default: <code>"back"</code>.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">import</span> time
+<span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">hover</span>(<span class="num">3</span>)
+drone.<span class="fn2">flip</span>(<span class="st">"back"</span>)
+time.sleep(<span class="num">4</span>) <span class="cm"># wait for flip to complete</span>
+drone.<span class="fn2">land</span>()
+drone.<span class="fn2">close</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">square() / triangle() / spiral() / sway()</span>
+            <span class="fn-brief">Shape-based flight patterns</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Functions</div>
+              <ul class="param-list">
+                <li><span class="param-name">square(speed=50, seconds=5, direction=1)</span><span class="param-desc">Fly in a square. Each side lasts <code>seconds</code>.</span></li>
+                <li><span class="param-name">triangle(speed=60, seconds=1, direction=1)</span><span class="param-desc">Fly in a triangle.</span></li>
+                <li><span class="param-name">spiral(speed=50, seconds=5, direction=1)</span><span class="param-desc">Fly in a downward spiral.</span></li>
+                <li><span class="param-name">sway(speed=30, seconds=2, direction=1)</span><span class="param-desc">Fly in a swaying left/right motion.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">square</span>()   <span class="cm"># fly a square</span>
+drone.<span class="fn2">triangle</span>() <span class="cm"># fly a triangle</span>
+drone.<span class="fn2">sway</span>()     <span class="cm"># sway side to side</span>
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FLIGHT VARIABLES -->
+  <div id="page-flight-variables" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Function Reference</div>
+      <h1>Flight Variables</h1>
+      <p class="hero-desc">Low-level control of roll, pitch, yaw, and throttle for precise custom movements.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+        <div class="note-box">⚙️&nbsp;<strong>How it works:</strong> Set flight variables with <code>set_roll()</code>, <code>set_pitch()</code>, <code>set_yaw()</code>, <code>set_throttle()</code>, then call <code>move(duration)</code> to execute. Variables persist until reset.</div>
+
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">set_pitch / set_roll / set_yaw / set_throttle</span>
+            <span class="fn-brief">Set flight motion variables (-100 to 100)</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Functions</div>
+              <ul class="param-list">
+                <li><span class="param-name">set_pitch(power)</span><span class="param-desc">Forward/backward. Positive=forward, negative=backward.</span></li>
+                <li><span class="param-name">set_roll(power)</span><span class="param-desc">Left/right. Positive=right, negative=left.</span></li>
+                <li><span class="param-name">set_yaw(power)</span><span class="param-desc">Rotation. Positive=left, negative=right.</span></li>
+                <li><span class="param-name">set_throttle(power)</span><span class="param-desc">Altitude. Positive=up, negative=down.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example — Combined movement</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">set_pitch</span>(<span class="num">50</span>)    <span class="cm"># set forward</span>
+drone.<span class="fn2">set_roll</span>(<span class="num">20</span>)     <span class="cm"># drift right slightly</span>
+drone.<span class="fn2">move</span>(<span class="num">2</span>)            <span class="cm"># execute for 2 seconds</span>
+drone.<span class="fn2">reset_move_values</span>() <span class="cm"># reset all to 0</span>
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">move(duration)</span>
+            <span class="fn-brief">Execute current flight variables</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Executes movement based on the currently-set flight variables. With a duration, runs for that many seconds. With no parameter, moves indefinitely. Must call <code>takeoff()</code> first.</div></div>
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.move(duration)</div></div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">reset_move_values() / get_move_values()</span>
+            <span class="fn-brief">Reset or read current flight variable state</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc"><code>reset_move_values()</code> resets roll, pitch, yaw, and throttle to 0. <code>get_move_values()</code> returns a list: [roll, pitch, yaw, throttle].</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">set_roll</span>(<span class="num">30</span>)
+drone.<span class="fn2">set_pitch</span>(<span class="num">40</span>)
+values = drone.<span class="fn2">get_move_values</span>()
+<span class="fn2">print</span>(<span class="st">"roll:"</span>, values[<span class="num">0</span>], <span class="st">"pitch:"</span>, values[<span class="num">1</span>])</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- LED -->
+  <div id="page-led" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Function Reference</div>
+      <h1>LED Control</h1>
+      <p class="hero-desc">Control the drone's and controller's RGB LEDs — set colors, brightness, and animated light modes.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">set_drone_LED(r, g, b, brightness)</span>
+            <span class="fn-brief">Set drone LED color and brightness</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Parameters</div>
+              <ul class="param-list">
+                <li><span class="param-name">r, g, b</span><span class="param-desc"><em>integer</em> — RGB values 0–255.</span></li>
+                <li><span class="param-name">brightness</span><span class="param-desc"><em>integer</em> — LED brightness 0–255.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">set_drone_LED</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>, <span class="num">100</span>)  <span class="cm"># blue LED</span>
+drone.<span class="fn2">set_controller_LED</span>(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">100</span>) <span class="cm"># red controller</span></code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">set_drone_LED_mode() / set_controller_LED_mode()</span>
+            <span class="fn-brief">Animated LED patterns</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.set_drone_LED_mode(r, g, b, mode, speed)<br>drone.set_controller_LED_mode(r, g, b, mode, speed)</div></div>
+            <div class="fn-row"><div class="fn-label">Available Modes</div>
+              <ul class="param-list">
+                <li><span class="param-name">"dimming"</span><span class="param-desc">Slowly dims and brightens</span></li>
+                <li><span class="param-name">"fade_in"</span><span class="param-desc">Fades in from off</span></li>
+                <li><span class="param-name">"fade_out"</span><span class="param-desc">Fades out to off</span></li>
+                <li><span class="param-name">"blink"</span><span class="param-desc">Single blink pattern</span></li>
+                <li><span class="param-name">"double_blink"</span><span class="param-desc">Double blink pattern</span></li>
+                <li><span class="param-name">"rainbow"</span><span class="param-desc">Rainbow cycle (RGB values ignored)</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">set_drone_LED_mode</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">255</span>, <span class="st">"blink"</span>, <span class="num">5</span>)
+drone.<span class="fn2">set_controller_LED_mode</span>(<span class="num">255</span>, <span class="num">255</span>, <span class="num">255</span>, <span class="st">"rainbow"</span>, <span class="num">10</span>)</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">drone_LED_off() / controller_LED_off()</span>
+            <span class="fn-brief">Turn off LEDs</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">drone_LED_off</span>()
+drone.<span class="fn2">controller_LED_off</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SOUNDS -->
+  <div id="page-sounds" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Function Reference</div>
+      <h1>Sounds &amp; Buzzer</h1>
+      <p class="hero-desc">Play notes, melodies, and preset sounds using the drone and controller buzzers.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">drone_buzzer(note, duration) / controller_buzzer(note, duration)</span>
+            <span class="fn-brief">Play a single note</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Parameters</div>
+              <ul class="param-list">
+                <li><span class="param-name">note</span><span class="param-desc"><em>integer or Note</em> — Frequency in Hz, or a <code>Note</code> object (e.g., <code>Note.A4</code>).</span></li>
+                <li><span class="param-name">duration</span><span class="param-desc"><em>integer</em> — Duration in milliseconds.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">drone_buzzer</span>(<span class="num">440</span>, <span class="num">500</span>)  <span class="cm"># A4 note, 500ms</span>
+drone.<span class="fn2">controller_buzzer</span>(Note.C4, <span class="num">300</span>)</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">start_drone_buzzer(note) / stop_drone_buzzer()</span>
+            <span class="fn-brief">Play buzzer in background while other commands run</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">start_drone_buzzer</span>(<span class="num">500</span>) <span class="cm"># start buzzing in background</span>
+
+<span class="kw">for</span> i <span class="kw">in</span> range(<span class="num">5</span>):
+    drone.<span class="fn2">set_drone_LED</span>(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">100</span>)
+    time.sleep(<span class="num">0.5</span>)
+    drone.<span class="fn2">set_drone_LED</span>(<span class="num">0</span>, <span class="num">255</span>, <span class="num">0</span>, <span class="num">100</span>)
+    time.sleep(<span class="num">0.5</span>)
+
+drone.<span class="fn2">stop_drone_buzzer</span>() <span class="cm"># stop buzzer</span></code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">drone_buzzer_sequence(kind) / controller_buzzer_sequence(kind)</span>
+            <span class="fn-brief">Preset success / warning / error sounds</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Parameters</div>
+              <ul class="param-list">
+                <li><span class="param-name">kind</span><span class="param-desc"><em>string</em> — <code>"success"</code>, <code>"warning"</code>, or <code>"error"</code>.</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>x = <span class="fn2">int</span>(<span class="fn2">input</span>(<span class="st">"Enter a number:"</span>))
+<span class="kw">if</span> x > <span class="num">5</span>:
+    drone.<span class="fn2">drone_buzzer_sequence</span>(<span class="st">"success"</span>)
+<span class="kw">else</span>:
+    drone.<span class="fn2">drone_buzzer_sequence</span>(<span class="st">"error"</span>)</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">ping(r, g, b)</span>
+            <span class="fn-brief">Identify drone with beep + LED blink</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Makes the drone beep while its LED blinks. Useful for identifying your drone in a room full of drones. If no RGB values are given, a random color is used.</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">ping</span>()             <span class="cm"># random color</span>
+drone.<span class="fn2">ping</span>(<span class="num">0</span>, <span class="num">255</span>, <span class="num">0</span>)   <span class="cm"># green ping</span></code></pre></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SENSORS RANGE -->
+  <div id="page-sensors-range" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Sensors</div>
+      <h1>Sensors — Range</h1>
+      <p class="hero-desc">Use the front and bottom range sensors to measure distance and detect objects.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">get_front_range(unit="cm")</span>
+            <span class="fn-brief">Distance to object in front (0–150cm)</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Returns distance from the drone to the surface directly in front. Returns <code>999</code> when out of range (&gt;1.5m) or timed out. Returns <code>-10</code> or <code>0</code> on sensor error.</div></div>
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.get_front_range()<br>drone.get_front_range(unit="cm")  # "m", "mm", "in" also available</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">import</span> time
+<span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+start = time.time()
+<span class="cm"># Grab drone and move it toward/away from a wall</span>
+<span class="kw">while</span> time.time() - start < <span class="num">20</span>:
+    <span class="fn2">print</span>(drone.<span class="fn2">get_front_range</span>())
+    time.sleep(<span class="num">0.05</span>)
+drone.<span class="fn2">close</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">get_bottom_range(unit="cm") / get_height(unit="cm")</span>
+            <span class="fn-brief">Distance from drone to surface below</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Both functions use the bottom range sensor. <strong>Note:</strong> When sitting on a surface, the sensor turns off (returns 0) so the color sensor can function. It is safe to treat 0 as "drone is on the ground." Returns <code>999.9</code> when out of range.</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">set_throttle</span>(<span class="num">50</span>)
+<span class="kw">while</span> drone.<span class="fn2">get_height</span>(<span class="st">"cm"</span>) <= <span class="num">100</span>:
+    drone.<span class="fn2">move</span>()
+    <span class="fn2">print</span>(drone.<span class="fn2">get_height</span>(<span class="st">"cm"</span>))
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">detect_wall(distance=50)</span>
+            <span class="fn-brief">Returns True when object is within threshold</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+<span class="kw">if</span> drone.<span class="fn2">detect_wall</span>(<span class="num">50</span>): <span class="cm"># True if object within 50cm</span>
+    <span class="fn2">print</span>(<span class="st">"Wall detected!"</span>)
+<span class="kw">else</span>:
+    <span class="fn2">print</span>(<span class="st">"No wall detected."</span>)
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SENSORS OPTICAL FLOW -->
+  <div id="page-sensors-optical" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Sensors</div>
+      <h1>Sensors — Optical Flow</h1>
+      <p class="hero-desc">Track the drone's position and velocity using the optical flow sensor.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+        <div class="note-box">📍&nbsp;<strong>Note:</strong> Position values reset to 0 when the drone takes off or the battery is re-inserted. X = forward/backward, Y = left/right, Z = up/down.</div>
+
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">get_pos_x() / get_pos_y() / get_pos_z()</span>
+            <span class="fn-brief">Current drone position from takeoff point</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Syntax</div><div class="syntax-block">drone.get_pos_x(unit="cm")<br>drone.get_pos_y(unit="cm")<br>drone.get_pos_z(unit="cm")</div></div>
+            <div class="fn-row"><div class="fn-label">Example — Fly 100cm forward using position tracking</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+start = drone.<span class="fn2">get_pos_x</span>(<span class="st">"cm"</span>)
+drone.<span class="fn2">set_pitch</span>(<span class="num">15</span>)
+
+<span class="kw">while</span> drone.<span class="fn2">get_pos_x</span>(<span class="st">"cm"</span>) - start < <span class="num">100</span>:
+    drone.<span class="fn2">move</span>()
+
+drone.<span class="fn2">hover</span>(<span class="num">1</span>)
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">get_flow_velocity_x() / get_flow_velocity_y()</span>
+            <span class="fn-brief">Raw optical flow velocity data</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Returns raw data proportional to drone velocity in the X (forward/back) or Y (left/right) direction from the optical flow sensor.</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+drone.<span class="fn2">set_pitch</span>(<span class="num">50</span>)
+drone.<span class="fn2">move</span>(<span class="num">1</span>)
+<span class="fn2">print</span>(drone.<span class="fn2">get_flow_velocity_x</span>())
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">get_position_data(delay=0.01)</span>
+            <span class="fn-brief">Return all position data as a list</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Returns</div><div class="fn-desc">List: <code>[time, x, y, z]</code></div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>drone.<span class="fn2">takeoff</span>()
+data = drone.<span class="fn2">get_position_data</span>()
+<span class="fn2">print</span>(data) <span class="cm"># [time, x, y, z]</span>
+drone.<span class="fn2">land</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SENSORS GYRO -->
+  <div id="page-sensors-gyro" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Sensors</div>
+      <h1>Sensors — Gyroscope</h1>
+      <p class="hero-desc">Read acceleration and angle data from the built-in gyroscope sensor.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+        <div class="note-box">🌀&nbsp;<strong>Note:</strong> Angle values reset to 0 when the drone takes off or battery is re-inserted. At rest, the Z-axis acceleration reads ~9.8 m/s² due to gravity.</div>
+
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">get_accel_x() / get_accel_y() / get_accel_z()</span>
+            <span class="fn-brief">Acceleration on each axis</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Axes</div>
+              <ul class="param-list">
+                <li><span class="param-name">get_accel_x()</span><span class="param-desc">X acceleration — forward/backward</span></li>
+                <li><span class="param-name">get_accel_y()</span><span class="param-desc">Y acceleration — left/right</span></li>
+                <li><span class="param-name">get_accel_z()</span><span class="param-desc">Z acceleration — up/down (reads ~9.8 at rest)</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">import</span> time
+<span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+start = time.time()
+<span class="cm"># Grab and tilt drone to see acceleration values</span>
+<span class="kw">while</span> time.time() - start < <span class="num">20</span>:
+    <span class="fn2">print</span>(drone.<span class="fn2">get_accel_x</span>(), drone.<span class="fn2">get_accel_y</span>())
+    time.sleep(<span class="num">0.05</span>)
+drone.<span class="fn2">close</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">get_angle_x() / get_angle_y() / get_angle_z()</span>
+            <span class="fn-brief">Tilt angles in degrees (roll, pitch, yaw)</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Axes</div>
+              <ul class="param-list">
+                <li><span class="param-name">get_angle_x()</span><span class="param-desc">Roll angle (left/right tilt)</span></li>
+                <li><span class="param-name">get_angle_y()</span><span class="param-desc">Pitch angle (forward/backward tilt)</span></li>
+                <li><span class="param-name">get_angle_z()</span><span class="param-desc">Yaw angle (rotation)</span></li>
+              </ul>
+            </div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">while</span> time.time() - start < <span class="num">20</span>:
+    <span class="fn2">print</span>(<span class="st">"Roll:"</span>, drone.<span class="fn2">get_angle_x</span>(),
+          <span class="st">"Pitch:"</span>, drone.<span class="fn2">get_angle_y</span>(),
+          <span class="st">"Yaw:"</span>, drone.<span class="fn2">get_angle_z</span>())
+    time.sleep(<span class="num">0.05</span>)</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SENSORS COLOR -->
+  <div id="page-sensors-color" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Sensors</div>
+      <h1>Sensors — Color</h1>
+      <p class="hero-desc">Detect colors using the drone's bottom-facing color sensor. Works with the Programming Mat and custom color training.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+        <div class="note-box">🎨&nbsp;<strong>Tip:</strong> The color sensor activates when the drone is sitting on a surface (bottom range sensor is 0). Use it with the <a href="https://docs.robolink.com/docs/CoDroneEDU/Resources/Programming-Mat" target="_blank" style="color:var(--accent)">CoDrone EDU Programming Mat</a> for best results.</div>
+
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">get_color_data()</span>
+            <span class="fn-brief">Raw HSVL color data from color sensor</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Returns</div><div class="fn-desc">A list of HSVL (Hue, Saturation, Value, Lightness) data from the color sensor.</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+data = drone.<span class="fn2">get_color_data</span>()
+<span class="fn2">print</span>(<span class="st">"HSVL:"</span>, data)
+drone.<span class="fn2">close</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn-card">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">get_color()</span>
+            <span class="fn-brief">Detect color name from Programming Mat</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Description</div><div class="fn-desc">Returns a string with the detected color name when using the CoDrone EDU Programming Mat. Common return values include <code>"red"</code>, <code>"blue"</code>, <code>"green"</code>, <code>"yellow"</code>, <code>"white"</code>, <code>"black"</code>.</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+color = drone.<span class="fn2">get_color</span>()
+<span class="fn2">print</span>(<span class="st">"Detected color:"</span>, color)
+<span class="kw">if</span> color == <span class="st">"red"</span>:
+    drone.<span class="fn2">set_drone_LED</span>(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">100</span>)
+drone.<span class="fn2">close</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SENSORS BATTERY -->
+  <div id="page-sensors-battery" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Python <span>›</span> Sensors</div>
+      <h1>Sensors — Battery</h1>
+      <p class="hero-desc">Monitor drone and controller battery levels.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+
+        <div class="fn-card open">
+          <div class="fn-header" onclick="toggleCard(this)">
+            <span class="fn-name">get_drone_battery() / get_controller_battery()</span>
+            <span class="fn-brief">Battery percentage (0–100)</span>
+            <div class="fn-toggle">+</div>
+          </div>
+          <div class="fn-body">
+            <div class="fn-row"><div class="fn-label">Returns</div><div class="fn-desc"><em>integer</em> — Battery level 0–100%.</div></div>
+            <div class="fn-row"><div class="fn-label">Example</div>
+              <div class="code-wrap"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="kw">from</span> codrone_edu.drone <span class="kw">import</span> *
+drone = Drone()
+drone.<span class="fn2">pair</span>()
+<span class="fn2">print</span>(<span class="st">"Drone battery:"</span>, drone.<span class="fn2">get_drone_battery</span>(), <span class="st">"%"</span>)
+<span class="fn2">print</span>(<span class="st">"Controller battery:"</span>, drone.<span class="fn2">get_controller_battery</span>(), <span class="st">"%"</span>)
+<span class="kw">if</span> drone.<span class="fn2">get_drone_battery</span>() < <span class="num">50</span>:
+    <span class="fn2">print</span>(<span class="st">"Warning: Low battery! Flips may not work."</span>)
+drone.<span class="fn2">close</span>()</code></pre></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SPECS -->
+  <div id="page-specs" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Resources</div>
+      <h1>Technical Specifications</h1>
+      <p class="hero-desc">Hardware specifications, dimensions, and documentation for the CoDrone EDU.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+        <div class="section-header">
+          <div class="section-icon icon-orange">📋</div>
+          <h2>CoDrone EDU Specs</h2>
+        </div>
+        <div class="spec-grid">
+          <div class="spec-card">
+            <h4>Drone</h4>
+            <div class="spec-row"><span class="spec-key">Programming</span><span class="spec-val">Python, Blockly</span></div>
+            <div class="spec-row"><span class="spec-key">Takeoff height</span><span class="spec-val">~80 cm</span></div>
+            <div class="spec-row"><span class="spec-key">Max speed</span><span class="spec-val">2.0 m/s</span></div>
+            <div class="spec-row"><span class="spec-key">Front sensor</span><span class="spec-val">0–150 cm</span></div>
+            <div class="spec-row"><span class="spec-key">Bottom sensor</span><span class="spec-val">0–150 cm</span></div>
+          </div>
+          <div class="spec-card">
+            <h4>Sensors</h4>
+            <div class="spec-row"><span class="spec-key">Gyroscope</span><span class="spec-val">3-axis IMU</span></div>
+            <div class="spec-row"><span class="spec-key">Optical flow</span><span class="spec-val">X/Y position tracking</span></div>
+            <div class="spec-row"><span class="spec-key">Color sensor</span><span class="spec-val">HSVL (bottom)</span></div>
+            <div class="spec-row"><span class="spec-key">Range sensors</span><span class="spec-val">Front + Bottom (ToF)</span></div>
+          </div>
+          <div class="spec-card">
+            <h4>Connectivity</h4>
+            <div class="spec-row"><span class="spec-key">Connection</span><span class="spec-val">USB-A cable</span></div>
+            <div class="spec-row"><span class="spec-key">Protocol</span><span class="spec-val">BLE via controller</span></div>
+            <div class="spec-row"><span class="spec-key">Platform</span><span class="spec-val">Windows, macOS, ChromeOS</span></div>
+          </div>
+          <div class="spec-card">
+            <h4>Library</h4>
+            <div class="spec-row"><span class="spec-key">Package</span><span class="spec-val">codrone-edu</span></div>
+            <div class="spec-row"><span class="spec-key">Current version</span><span class="spec-val">2.8</span></div>
+            <div class="spec-row"><span class="spec-key">Python</span><span class="spec-val">3.x</span></div>
+            <div class="spec-row"><span class="spec-key">Install</span><span class="spec-val">pip install codrone-edu</span></div>
+          </div>
+        </div>
+        <div style="margin-top:24px">
+          <a href="https://docs.robolink.com/assets/files/cde_technical_specifications_v_1_1-f30e6119adce4bd8ca75457bc7515ce9.pdf" target="_blank" style="display:inline-flex; align-items:center; gap:8px; padding: 10px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 600; transition: border-color 0.15s;">📄 Download Full Specs PDF ↗</a>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <div class="section-header">
+          <div class="section-icon icon-green">🔗</div>
+          <h2>Official Resources</h2>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px">
+          <a href="https://docs.robolink.com/docs/CoDroneEDU/Python/Python-Changelog" target="_blank" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);text-decoration:none;transition:border-color 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="font-size:20px">📝</span>
+            <div><div style="font-weight:600;font-size:14px">Python Changelog</div><div style="font-size:12px;color:var(--text3)">Version history and release notes</div></div>
+          </a>
+          <a href="https://docs.robolink.com/docs/CoDroneEDU/Resources/Firmware" target="_blank" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);text-decoration:none;transition:border-color 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="font-size:20px">⚙️</span>
+            <div><div style="font-weight:600;font-size:14px">Firmware Updates</div><div style="font-size:12px;color:var(--text3)">Download latest drone firmware</div></div>
+          </a>
+          <a href="https://learn.robolink.com/" target="_blank" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);text-decoration:none;transition:border-color 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span style="font-size:20px">🎓</span>
+            <div><div style="font-weight:600;font-size:14px">Robolink Lessons</div><div style="font-size:12px;color:var(--text3)">Guided curriculum and projects</div></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SENSOR GUIDE -->
+  <div id="page-sensor-guide" class="page" style="display:none">
+    <div id="hero">
+      <div class="breadcrumb">Resources</div>
+      <h1>Sensor Guide</h1>
+      <p class="hero-desc">Overview of all sensors on the CoDrone EDU and how to use them effectively.</p>
+    </div>
+    <div id="content">
+      <div class="doc-section">
+        <div class="spec-grid" style="grid-template-columns:1fr;">
+          <div class="spec-card">
+            <h4>📡 Front Range Sensor (ToF)</h4>
+            <div class="spec-row"><span class="spec-key">Range</span><span class="spec-val">~9mm – 150cm</span></div>
+            <div class="spec-row"><span class="spec-key">Function</span><span class="spec-val">get_front_range(), detect_wall(), avoid_wall()</span></div>
+            <div class="spec-row"><span class="spec-key">Note</span><span class="spec-val">Cannot read exactly 0 due to light scatter</span></div>
+          </div>
+          <div class="spec-card" style="margin-top:14px">
+            <h4>⬇️ Bottom Range Sensor (ToF)</h4>
+            <div class="spec-row"><span class="spec-key">Range</span><span class="spec-val">0 – 150cm</span></div>
+            <div class="spec-row"><span class="spec-key">Function</span><span class="spec-val">get_bottom_range(), get_height()</span></div>
+            <div class="spec-row"><span class="spec-key">Note</span><span class="spec-val">Turns off when on surface (returns 0) so color sensor can work</span></div>
+          </div>
+          <div class="spec-card" style="margin-top:14px">
+            <h4>👁️ Optical Flow Sensor</h4>
+            <div class="spec-row"><span class="spec-key">Tracks</span><span class="spec-val">X/Y position and velocity</span></div>
+            <div class="spec-row"><span class="spec-key">Functions</span><span class="spec-val">get_pos_x/y/z(), get_flow_velocity_x/y()</span></div>
+            <div class="spec-row"><span class="spec-key">Best surface</span><span class="spec-val">Well-lit, patterned surface for accuracy</span></div>
+            <div class="spec-row"><span class="spec-key">Reset</span><span class="spec-val">Values reset on takeoff or battery reinsertion</span></div>
+          </div>
+          <div class="spec-card" style="margin-top:14px">
+            <h4>🌀 Gyroscope / IMU</h4>
+            <div class="spec-row"><span class="spec-key">Tracks</span><span class="spec-val">3-axis acceleration and angle</span></div>
+            <div class="spec-row"><span class="spec-key">Functions</span><span class="spec-val">get_accel_x/y/z(), get_angle_x/y/z()</span></div>
+            <div class="spec-row"><span class="spec-key">Z at rest</span><span class="spec-val">~9.8 m/s² (gravity)</span></div>
+          </div>
+          <div class="spec-card" style="margin-top:14px">
+            <h4>🎨 Color Sensor</h4>
+            <div class="spec-row"><span class="spec-key">Reads</span><span class="spec-val">HSVL (Hue, Saturation, Value, Lightness)</span></div>
+            <div class="spec-row"><span class="spec-key">Functions</span><span class="spec-val">get_color(), get_color_data()</span></div>
+            <div class="spec-row"><span class="spec-key">Active when</span><span class="spec-val">Drone is sitting on a surface</span></div>
+            <div class="spec-row"><span class="spec-key">Best use</span><span class="spec-val">Programming Mat or custom color training</span></div>
+          </div>
+        </div>
+        <div class="note-box" style="margin-top:18px">🔗&nbsp;Full sensor guide: <a href="https://docs.robolink.com/docs/CoDroneEDU/Resources/Sensor-Guide" target="_blank" style="color:var(--accent)">docs.robolink.com/docs/CoDroneEDU/Resources/Sensor-Guide</a></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const pages = {
+    'home': 'page-home',
+    'getting-started': 'page-getting-started',
+    'updating': 'page-updating',
+    'connection': 'page-connection',
+    'flight-commands': 'page-flight-commands',
+    'flight-sequences': 'page-flight-sequences',
+    'flight-variables': 'page-flight-variables',
+    'led': 'page-led',
+    'sounds': 'page-sounds',
+    'sensors-range': 'page-sensors-range',
+    'sensors-optical': 'page-sensors-optical',
+    'sensors-gyro': 'page-sensors-gyro',
+    'sensors-color': 'page-sensors-color',
+    'sensors-battery': 'page-sensors-battery',
+    'specs': 'page-specs',
+    'sensor-guide': 'page-sensor-guide',
+  };
+
+  function show(pageKey) {
+    Object.values(pages).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    const target = document.getElementById(pages[pageKey]);
+    if (target) target.style.display = 'block';
+
+    // Update active nav
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    const links = document.querySelectorAll('.nav-link');
+    links.forEach(l => {
+      if (l.getAttribute('onclick') && l.getAttribute('onclick').includes(`'${pageKey}'`)) {
+        l.classList.add('active');
+      }
+    });
+
+    // Scroll main to top
+    document.getElementById('main').scrollTo(0, 0);
+    // Close sidebar on mobile
+    if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+  }
+
+  function toggleCard(header) {
+    header.parentElement.classList.toggle('open');
+  }
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+  }
+
+  // ───── SEARCH INDEX ─────
+  const searchIndex = [
+    // Connection
+    { name: 'pair()', section: 'connection', page: 'connection', desc: 'Connect controller to program. Optional port name parameter.' },
+    { name: 'close()', section: 'connection', page: 'connection', desc: 'Close connection between controller and program.' },
+    // Flight Commands
+    { name: 'takeoff()', section: 'flight-commands', page: 'flight-commands', desc: 'Take off and hover at ~80cm height.' },
+    { name: 'land()', section: 'flight-commands', page: 'flight-commands', desc: 'Soft landing at current position. Resets flight variables.' },
+    { name: 'emergency_stop()', section: 'flight-commands', page: 'flight-commands', desc: 'Immediately cut all motors and stop.' },
+    { name: 'hover(duration)', section: 'flight-commands', page: 'flight-commands', desc: 'Hover in place for given number of seconds.' },
+    { name: 'go(direction, power, duration)', section: 'flight-commands', page: 'flight-commands', desc: 'Beginner-friendly directional movement. forward, backward, left, right.' },
+    { name: 'move_forward(distance, units, speed)', section: 'flight-commands', page: 'flight-commands', desc: 'Move drone forward a precise distance.' },
+    { name: 'move_backward(distance, units, speed)', section: 'flight-commands', page: 'flight-commands', desc: 'Move drone backward a precise distance.' },
+    { name: 'move_left(distance, units, speed)', section: 'flight-commands', page: 'flight-commands', desc: 'Move drone left a precise distance.' },
+    { name: 'move_right(distance, units, speed)', section: 'flight-commands', page: 'flight-commands', desc: 'Move drone right a precise distance.' },
+    { name: 'move_distance(x, y, z, velocity)', section: 'flight-commands', page: 'flight-commands', desc: 'Move relative on all 3 axes simultaneously.' },
+    { name: 'send_absolute_position()', section: 'flight-commands', page: 'flight-commands', desc: 'Move to absolute position from takeoff location.' },
+    { name: 'turn(power, seconds)', section: 'flight-commands', page: 'flight-commands', desc: 'Turn by power value. Negative=right, positive=left.' },
+    { name: 'turn_left(degree)', section: 'flight-commands', page: 'flight-commands', desc: 'Turn left by degrees using gyroscope. Default 90°.' },
+    { name: 'turn_right(degree)', section: 'flight-commands', page: 'flight-commands', desc: 'Turn right by degrees using gyroscope. Default 90°.' },
+    { name: 'turn_degree(degree, timeout)', section: 'flight-commands', page: 'flight-commands', desc: 'Turn to absolute heading in degrees.' },
+    { name: 'set_trim(roll, pitch)', section: 'flight-commands', page: 'flight-commands', desc: 'Set roll and pitch trim to correct drone drift.' },
+    { name: 'reset_trim()', section: 'flight-commands', page: 'flight-commands', desc: 'Reset roll and pitch trim values to zero.' },
+    { name: 'get_trim()', section: 'flight-commands', page: 'flight-commands', desc: 'Get current roll and pitch trim values.' },
+    { name: 'avoid_wall(timeout, distance)', section: 'flight-commands', page: 'flight-commands', desc: 'Fly forward and stop at given distance from wall.' },
+    { name: 'keep_distance(timeout, distance)', section: 'flight-commands', page: 'flight-commands', desc: 'Maintain a set distance from an object.' },
+    // Flight Sequences
+    { name: 'circle(speed, direction)', section: 'flight-sequences', page: 'flight-sequences', desc: 'Fly in a circle. ~4-5ft diameter.' },
+    { name: 'flip(direction)', section: 'flight-sequences', page: 'flight-sequences', desc: 'Perform a flip. Battery must be above 50%.' },
+    { name: 'square(speed, seconds, direction)', section: 'flight-sequences', page: 'flight-sequences', desc: 'Fly in the shape of a square.' },
+    { name: 'triangle(speed, seconds, direction)', section: 'flight-sequences', page: 'flight-sequences', desc: 'Fly in the shape of a triangle.' },
+    { name: 'spiral(speed, seconds, direction)', section: 'flight-sequences', page: 'flight-sequences', desc: 'Fly in a downward spiral.' },
+    { name: 'sway(speed, seconds, direction)', section: 'flight-sequences', page: 'flight-sequences', desc: 'Fly in a swaying side-to-side motion.' },
+    // Flight Variables
+    { name: 'set_pitch(power)', section: 'flight-variables', page: 'flight-variables', desc: 'Set pitch variable. Positive=forward, negative=backward. Use with move().' },
+    { name: 'set_roll(power)', section: 'flight-variables', page: 'flight-variables', desc: 'Set roll variable. Positive=right, negative=left. Use with move().' },
+    { name: 'set_yaw(power)', section: 'flight-variables', page: 'flight-variables', desc: 'Set yaw variable. Positive=left, negative=right. Use with move().' },
+    { name: 'set_throttle(power)', section: 'flight-variables', page: 'flight-variables', desc: 'Set throttle variable. Positive=up, negative=down. Use with move().' },
+    { name: 'move(duration)', section: 'flight-variables', page: 'flight-variables', desc: 'Execute current flight variables for given duration.' },
+    { name: 'reset_move_values()', section: 'flight-variables', page: 'flight-variables', desc: 'Reset roll, pitch, yaw, throttle all to 0.' },
+    { name: 'get_move_values()', section: 'flight-variables', page: 'flight-variables', desc: 'Returns list of current flight variable values [roll, pitch, yaw, throttle].' },
+    // LED
+    { name: 'set_drone_LED(r, g, b, brightness)', section: 'led', page: 'led', desc: 'Set drone LED color and brightness (0-255).' },
+    { name: 'set_controller_LED(r, g, b, brightness)', section: 'led', page: 'led', desc: 'Set controller LED color and brightness (0-255).' },
+    { name: 'drone_LED_off()', section: 'led', page: 'led', desc: 'Turn off the drone LED.' },
+    { name: 'controller_LED_off()', section: 'led', page: 'led', desc: 'Turn off the controller LED.' },
+    { name: 'set_drone_LED_mode(r, g, b, mode, speed)', section: 'led', page: 'led', desc: 'Animated LED pattern: dimming, fade_in, fade_out, blink, double_blink, rainbow.' },
+    { name: 'set_controller_LED_mode(r, g, b, mode, speed)', section: 'led', page: 'led', desc: 'Animated controller LED pattern.' },
+    // Sounds
+    { name: 'drone_buzzer(note, duration)', section: 'sounds', page: 'sounds', desc: 'Play a note on the drone buzzer. Note in Hz or Note object.' },
+    { name: 'controller_buzzer(note, duration)', section: 'sounds', page: 'sounds', desc: 'Play a note on the controller buzzer.' },
+    { name: 'start_drone_buzzer(note)', section: 'sounds', page: 'sounds', desc: 'Start drone buzzer in background while other commands run.' },
+    { name: 'stop_drone_buzzer()', section: 'sounds', page: 'sounds', desc: 'Stop the drone buzzer.' },
+    { name: 'start_controller_buzzer(note)', section: 'sounds', page: 'sounds', desc: 'Start controller buzzer in background.' },
+    { name: 'stop_controller_buzzer()', section: 'sounds', page: 'sounds', desc: 'Stop the controller buzzer.' },
+    { name: 'drone_buzzer_sequence(kind)', section: 'sounds', page: 'sounds', desc: 'Play success, warning, or error sound sequence on drone.' },
+    { name: 'controller_buzzer_sequence(kind)', section: 'sounds', page: 'sounds', desc: 'Play success, warning, or error sound sequence on controller.' },
+    { name: 'ping(r, g, b)', section: 'sounds', page: 'sounds', desc: 'Beep and blink LED to identify drone. Random color if no RGB given.' },
+    // Sensors Range
+    { name: 'get_front_range(unit)', section: 'sensors-range', page: 'sensors-range', desc: 'Distance to object in front. Range 0-150cm. Returns 999 if out of range.' },
+    { name: 'get_bottom_range(unit)', section: 'sensors-range', page: 'sensors-range', desc: 'Distance from drone to surface below. Returns 0 when on ground.' },
+    { name: 'get_height(unit)', section: 'sensors-range', page: 'sensors-range', desc: 'Current height from bottom range sensor. Same as get_bottom_range.' },
+    { name: 'detect_wall(distance)', section: 'sensors-range', page: 'sensors-range', desc: 'Returns True when object is within threshold distance (default 50cm).' },
+    // Sensors Optical Flow
+    { name: 'get_pos_x(unit)', section: 'sensors-optical', page: 'sensors-optical', desc: 'X position from takeoff point (forward/backward). Resets on takeoff.' },
+    { name: 'get_pos_y(unit)', section: 'sensors-optical', page: 'sensors-optical', desc: 'Y position from takeoff point (left/right). Resets on takeoff.' },
+    { name: 'get_pos_z(unit)', section: 'sensors-optical', page: 'sensors-optical', desc: 'Z position from takeoff point (up/down). Resets on takeoff.' },
+    { name: 'get_flow_velocity_x()', section: 'sensors-optical', page: 'sensors-optical', desc: 'Raw X-velocity data from optical flow sensor.' },
+    { name: 'get_flow_velocity_y()', section: 'sensors-optical', page: 'sensors-optical', desc: 'Raw Y-velocity data from optical flow sensor.' },
+    { name: 'get_position_data(delay)', section: 'sensors-optical', page: 'sensors-optical', desc: 'Returns list [time, x, y, z] of all position data.' },
+    // Sensors Gyro
+    { name: 'get_accel_x()', section: 'sensors-gyro', page: 'sensors-gyro', desc: 'X-axis acceleration (forward/backward).' },
+    { name: 'get_accel_y()', section: 'sensors-gyro', page: 'sensors-gyro', desc: 'Y-axis acceleration (left/right).' },
+    { name: 'get_accel_z()', section: 'sensors-gyro', page: 'sensors-gyro', desc: 'Z-axis acceleration (up/down). ~9.8 at rest due to gravity.' },
+    { name: 'get_angle_x()', section: 'sensors-gyro', page: 'sensors-gyro', desc: 'Roll angle in degrees. Resets on takeoff.' },
+    { name: 'get_angle_y()', section: 'sensors-gyro', page: 'sensors-gyro', desc: 'Pitch angle in degrees. Resets on takeoff.' },
+    { name: 'get_angle_z()', section: 'sensors-gyro', page: 'sensors-gyro', desc: 'Yaw angle in degrees. Resets on takeoff.' },
+    // Sensors Color
+    { name: 'get_color()', section: 'sensors-color', page: 'sensors-color', desc: 'Detect color name from Programming Mat. Returns "red", "blue", etc.' },
+    { name: 'get_color_data()', section: 'sensors-color', page: 'sensors-color', desc: 'Raw HSVL color data from bottom color sensor.' },
+    // Battery
+    { name: 'get_drone_battery()', section: 'sensors-battery', page: 'sensors-battery', desc: 'Drone battery percentage 0-100.' },
+    { name: 'get_controller_battery()', section: 'sensors-battery', page: 'sensors-battery', desc: 'Controller battery percentage 0-100.' },
+  ];
+
+  const sectionLabels = {
+    'connection': 'Connection',
+    'flight-commands': 'Flight Commands',
+    'flight-sequences': 'Flight Sequences',
+    'flight-variables': 'Flight Variables',
+    'led': 'LED Control',
+    'sounds': 'Sounds',
+    'sensors-range': 'Sensors — Range',
+    'sensors-optical': 'Sensors — Optical Flow',
+    'sensors-gyro': 'Sensors — Gyroscope',
+    'sensors-color': 'Sensors — Color',
+    'sensors-battery': 'Sensors — Battery',
+  };
+
+  let selectedIdx = -1;
+
+  function handleSearch(val) {
+    const box = document.getElementById('search-results');
+    if (!val.trim()) { box.classList.remove('visible'); box.innerHTML = ''; selectedIdx = -1; return; }
+    const q = val.toLowerCase();
+    const matches = searchIndex.filter(item =>
+      item.name.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q)
+    ).slice(0, 10);
+
+    if (!matches.length) {
+      box.innerHTML = '<div class="sr-empty">No results for "' + val + '"</div>';
+    } else {
+      box.innerHTML = matches.map((item, i) => {
+        const hi = (str) => str.replace(new RegExp('(' + val.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<span class="sr-highlight">$1</span>');
+        return `<div class="sr-item" onclick="goToResult('${item.page}')" data-idx="${i}">
+          <div class="sr-name">${hi(item.name)}</div>
+          <div class="sr-section">${sectionLabels[item.section] || item.section}</div>
+          <div class="sr-match">${hi(item.desc)}</div>
+        </div>`;
+      }).join('');
+    }
+    box.classList.add('visible');
+    selectedIdx = -1;
+  }
+
+  function handleSearchKey(e) {
+    const box = document.getElementById('search-results');
+    const items = box.querySelectorAll('.sr-item');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); selectedIdx = Math.min(selectedIdx+1, items.length-1); highlightResult(items); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIdx = Math.max(selectedIdx-1, 0); highlightResult(items); }
+    else if (e.key === 'Enter' && selectedIdx >= 0) { items[selectedIdx].click(); }
+    else if (e.key === 'Escape') { box.classList.remove('visible'); }
+  }
+
+  function highlightResult(items) {
+    items.forEach((el, i) => el.style.background = i === selectedIdx ? 'var(--bg3)' : '');
+    if (selectedIdx >= 0) items[selectedIdx].scrollIntoView({ block: 'nearest' });
+  }
+
+  function goToResult(page) {
+    show(page);
+    const box = document.getElementById('search-results');
+    box.classList.remove('visible');
+    document.getElementById('search-input').value = '';
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-wrap')) {
+      const box = document.getElementById('search-results');
+      if (box) box.classList.remove('visible');
+    }
+  });
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
+    });
+  }
+</script>
+</body>
+</html>
